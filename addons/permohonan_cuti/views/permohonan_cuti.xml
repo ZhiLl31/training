@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+    <!-- permohonan.cuti tree view -->
+    <record id="cep_permohonan_cuti_view_tree" model="ir.ui.view">
+        <field name="name">cep.permohonan.cuti.view.tree</field>
+        <field name="model">cep.permohonan.cuti</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- Add your fields here -->
+                    <field name="name"/>
+                    <field name="nik"/>
+                    <field name="wilayah"/>
+                    <field name="jabatan"/>
+                    <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!-- cep.permohonan.cuti form view -->
+    <record id="cep_permohonan_cuti_view_form" model="ir.ui.view">
+        <field name="name">cep.permohonan.cuti.view.form</field>
+        <field name="model">cep.permohonan.cuti</field>
+        <field name="arch" type="xml">
+            <form string="Permohonan Cuti">
+                <header>
+                    <button string="SUBMIT" name="action_confirm" type="object" class="oe_highlight" states="draft" groups="permohonan_cuti.group_pengguna"/>
+                    <button string="APPROVE" name="action_approve" type="object" class="oe_highlight" states="confirm" groups="permohonan_cuti.group_supervisor"/>
+                    <button string="DONE" name="action_done" type="object" class="oe_highlight" states="approve" groups="permohonan_cuti.group_manager"/>
+                    <button string="RESET" name="action_draft" type="object" class="oe_highlight" states="approve,confirm,done" groups="permohonan_cuti.group_manager"/>
+                    <button string="REJECT" name="action_reject" type="object" class="oe_highlight btn-danger" states="approve" groups="permohonan_cuti.supervisor"/>
+                    <button string="Back To Draft" name="action_draft" type="object" class="oe_highlight" states="confirm" groups="permohonan_cuti.group_supervisor"/>
+                    <button string="Back To Confirm" name="action_confirm" type="object" class="oe_highlight" states="approve" groups="permohonan_cuti.group_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" text="Selesai" bg_color="bg-info" attrs="{'invisible':[('state','!=','done')]}"/>
+                        <!-- Add your fields here -->
+                    <group string="Diisi oleh karyawan yang bersangkutan">
+                        <group>
+                            <field name="name" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="nik" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="wilayah" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="jabatan" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+                    <group string="Periode Cuti">
+                        <group>
+                            <!-- <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}"/>  -->
+                            <!-- <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}"/> -->
+                            <!-- <field name="jumlah" attrs="{'readonly': [('state','!=','draft')]}"/> -->
+                            <field name="alamat" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="no_telp" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="ttd" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Rincian_Cuti" string="Rincian Cuti">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="tanggal_cuti"/>
+                                    <field name="jenis_cuti"/>
+                                    <field name="approval" readonly="1"/>  
+                                    <field name="approval_state_check" invisible="1"/>
+                                    <button string="Approve" name="action_approve" type="object" class="oe_highlight bg-success" groups="permohonan_cuti.group_manager" attrs="{'invisible': ['|', ('approval', '=', 'approve'), ('approval_state_check', '=', True)]}"/>  
+                                    <button string="Reject" name="action_reject" type="object" class="oe_highlight btn-danger" groups="permohonan_cuti.group_manager" attrs="{'invisible': ['|', ('approval', '=', 'reject'), ('approval_state_check', '=', True)]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <notebook>
+                        <page string="HRD/GA">
+                            <group string="Diisi oleh HRD/General Affairs" group="permohonan_cuti.group_supervisor">
+                                <group>
+                                    <field name="jatah_cuti" attrs="{'readonly': [('state','!=','confirm')]}"/>
+                                    <field name="cuti_terpakai" attrs="{'readonly': [('state','!=','confirm')]}"/>
+                                </group>
+                                <group>
+                                    <field name="cadangan" attrs="{'readonly': [('state','!=','confirm')]}"/>
+                                    <field name="jumlah_pengajuan" attrs="{'readonly': [('state','!=','confirm')]}"/>
+                                    <field name="sisa_cuti" attrs="{'readonly': [('state','!=','confirm')]}"/>
+                                    <field name="ttd_hrd" attrs="{'readonly': [('state','!=','confirm')]}"/>
+                                </group>   
+                            </group>
+                        </page>
+                        <page string="Manager/Direksi/Kadev">
+                            <group string="Diisi oleh Manager/Kadiv/Direksi" group="permohonan_cuti.group_manager">
+                                <group>
+                                    <field name="jumlah_cuti" attrs="{'readonly': [('state','!=','approve')]}"/>
+                                    <field name="alasan" attrs="{'readonly': [('state','!=','approve')]}"/>
+                                </group>
+                                <group>
+                                    <field name="tanda_tangan" attrs="{'readonly': [('state','!=','approve')]}"/>  
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+            <!-- cep_permohonan_cuti action window -->
+            <record id="cep_permohonan_cuti_action" model="ir.actions.act_window">
+                <field name="name">Permohonan Cuti</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">cep.permohonan.cuti</field>
+                <field name="view_mode">tree,form</field>
+                <field name="help" type="html">
+                    <p class="oe_view_nocontent_create">
+                        <!-- Add Text Here -->
+                    </p><p>
+                        <!-- More details about what a user can do with this object will be OK --> 
+                    
+                    </p>
+                </field>
+            </record>
+            <!-- This Menu Item must have a parent and an action -->
+            <menuitem id="cep_permohonan_cuti_menu_act" name="Permohonan Cuti" parent="pengaturan_menu_categ" action="cep_permohonan_cuti_action" sequence="10"/>
+        
+    
+    </data>
+    
+</odoo>

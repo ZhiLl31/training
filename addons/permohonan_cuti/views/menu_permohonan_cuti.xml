@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!-- This Menu Item will appear in the Upper bar, that's why It needs NO parent or action -->
+        <menuitem id="cep_permohonan_cuti_menu_root" name="Permohonan Cuti" sequence="10" web_icon="permohonan_cuti,static/description/icon.png"/>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="pengaturan_menu_categ" name="Permohonan Cuti" parent="cep_permohonan_cuti_menu_root" sequence="30"/>
+    
+        
+    
+    </data>
+    
+</odoo>

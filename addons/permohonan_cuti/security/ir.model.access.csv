@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_permohonan_cuti_pengguna,access_permohonan_cuti_pengguna,model_cep_permohonan_cuti,group_pengguna,1,1,1,0
+access_permohonan_cuti_manager,access_permohonan_cuti_manager,model_cep_permohonan_cuti,group_manager,1,1,1,1
+access_permohonan_cuti_supervisor,access_permohonan_cuti_supervisor,model_cep_permohonan_cuti,group_supervisor,1,1,1,1
+access_permohonan_cuti_admin,access_permohonan_cuti_admin,model_cep_permohonan_cuti,group_admin,1,1,1,1
+
+access_permohonan_cuti_line,access_permohonan_cuti_line,model_cep_permohonan_cuti_line,,1,1,1,1
+
