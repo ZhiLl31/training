@@ -32,6 +32,8 @@ class PermohonanCuti(models.Model):
 	sisa_cuti = fields.Char(string='Sisa Cuti Tersedia')
 	ttd_hrd = fields.Binary(string='Tanda Tangan HRD/GA')
 	state = fields.Selection(string='Status', selection=[('draft', 'DRAFT'), ('confirm', 'CONFIRM'),('reject','REJECT'), ('approve', 'APPROVE'), ('done', 'DONE')],default='draft', tracking=True)
+	image_1920 = fields.Binary(string='Foto')
+	
 	
 	@api.constrains('create_uid')
 	def _compute_name(self):
@@ -86,7 +88,7 @@ class PermohonanCutiLine(models.Model):
 	('lahir', 'Cuti Melahirkan (Khusus Wanita)'),
 	('cphl', 'Cuti Pengganti Hari Libur'),
 	('lain', 'Cuti Lainnya')
-	], required=True)
+	], required=True, default='biasa')
 	tanggal_cuti = fields.Date(string='Tanggal Cuti')
 	approval = fields.Selection(string='Status', selection=[
 		('draft', 'DRAFT'),
@@ -106,3 +108,14 @@ class PermohonanCutiLine(models.Model):
 	def _compute_approval_state_check(self):
 		for record in self:
 			record.approval_state_check = record.cuti_id.state != 'approve'
+	
+	@api.constrains('tanggal_cuti','cuti_id.create_uid')
+	def _check_duplicate_cuti_date(self):
+		for rec in self:
+			duplicate_cuti = self.env['cep.permohonan.cuti.line'].search([
+				('tanggal_cuti', '=', rec.tanggal_cuti),
+				('cuti_id.create_uid', '=', rec.cuti_id.create_uid.id),
+				('id', '!=', rec.id),
+			])
+			if duplicate_cuti:
+				raise ValidationError('tidak boleh mengajukan cuti dengan tanggal yang sama ')

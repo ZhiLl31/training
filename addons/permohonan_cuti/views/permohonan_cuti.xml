@@ -33,6 +33,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done"/>
                 </header>
                 <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
                     <widget name="web_ribbon" text="Selesai" bg_color="bg-info" attrs="{'invisible':[('state','!=','done')]}"/>
                         <!-- Add your fields here -->
                     <group string="Diisi oleh karyawan yang bersangkutan">
